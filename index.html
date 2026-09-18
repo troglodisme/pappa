@@ -84,13 +84,13 @@
   .rule{height:1px;background:var(--line);margin:14px 0 18px;border:0}
 
   .meal-label{font-size:12.5px;font-weight:600;color:var(--muted);margin:0 0 6px}
-  .primo{
+  .dishes{list-style:none;margin:0;padding:0}
+  .dishes li{
     font-family:Fraunces,Georgia,serif;
     font-size:26px;line-height:1.24;font-weight:400;
     letter-spacing:-.012em;
     margin:0 0 4px;
   }
-  .secondi{font-family:Fraunces,Georgia,serif;font-size:19px;line-height:1.3;color:var(--muted);font-weight:400;margin:0}
   sup.alg{
     font-family:Archivo,sans-serif;
     font-size:10px;font-weight:600;
@@ -160,7 +160,7 @@
 
   @media (max-width:420px){
     .wrap{padding:22px 16px 48px}
-    .primo{font-size:23px}
+    .dishes li{font-size:23px}
     .key{columns:1}
   }
 </style>
@@ -476,13 +476,11 @@
       .filter(function(x){ return !/^Pane\b/i.test(plain(x)); })
       .map(dish)
       .join(", ");
+    var dishes = "<li>" + primo + "</li>" + (secondi ? "<li>" + secondi + "</li>" : "");
 
     todayEl.innerHTML = head + '<hr class="rule">' +
       '<div class="meal-block"><p class="meal-label">Spuntino</p><p class="meal-val">' + SNACK + "</p></div>" +
-      '<div class="meal-block"><p class="meal-label">Pranzo</p>' +
-        '<p class="primo">' + primo + "</p>" +
-        (secondi ? '<p class="secondi">' + secondi + "</p>" : "") +
-      "</div>" +
+      '<div class="meal-block"><p class="meal-label">Pranzo</p><ul class="dishes">' + dishes + "</ul></div>" +
       '<div class="meal-block"><p class="meal-label">Merenda</p><p class="meal-val">' + dish(c.m) + "</p></div>";
   }
 

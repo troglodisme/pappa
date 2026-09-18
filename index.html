@@ -86,10 +86,18 @@
   .meal-label{font-size:12.5px;font-weight:600;color:var(--muted);margin:0 0 6px}
   .dishes{list-style:none;margin:0;padding:0}
   .dishes li{
+    display:flex;align-items:flex-start;gap:12px;
     font-family:Fraunces,Georgia,serif;
     font-size:26px;line-height:1.24;font-weight:400;
     letter-spacing:-.012em;
-    margin:0 0 4px;
+    margin:0 0 8px;
+  }
+  .dishes li::before{
+    content:"";
+    flex:none;
+    width:7px;height:7px;margin-top:.5em;
+    border-radius:999px;
+    background:var(--glaze);
   }
   sup.alg{
     font-family:Archivo,sans-serif;
@@ -476,7 +484,7 @@
       .filter(function(x){ return !/^Pane\b/i.test(plain(x)); })
       .map(dish)
       .join(", ");
-    var dishes = "<li>" + primo + "</li>" + (secondi ? "<li>" + secondi + "</li>" : "");
+    var dishes = "<li><span>" + primo + "</span></li>" + (secondi ? "<li><span>" + secondi + "</span></li>" : "");
 
     todayEl.innerHTML = head + '<hr class="rule">' +
       '<div class="meal-block"><p class="meal-label">Spuntino</p><p class="meal-val">' + SNACK + "</p></div>" +

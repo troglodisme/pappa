@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F5F7F4">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Menu nido">
+<title>Menu al nido</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F5F7F4;
+    --card:#FFFFFF;
+    --ink:#16212A;
+    --muted:#63737E;
+    --glaze:#2C88AE;
+    --glaze-soft:#E6F1F6;
+    --ochre:#C98C1E;
+    --line:#DCE3DE;
+    --focus:#2C88AE;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --paper:#121A21;
+      --card:#18222B;
+      --ink:#EAF0F2;
+      --muted:#93A5AF;
+      --glaze:#6BB9D8;
+      --glaze-soft:#1D3038;
+      --ochre:#D9AF56;
+      --line:#2A3841;
+      --focus:#6BB9D8;
+    }
+  }
+  :root[data-theme="dark"]{
+    --paper:#121A21;
+    --card:#18222B;
+    --ink:#EAF0F2;
+    --muted:#93A5AF;
+    --glaze:#6BB9D8;
+    --glaze-soft:#1D3038;
+    --ochre:#D9AF56;
+    --line:#2A3841;
+    --focus:#6BB9D8;
+  }
+
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;overflow-x:hidden}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:Archivo,"Helvetica Neue",Arial,sans-serif;
+    font-size:16px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+    touch-action:manipulation;
+  }
+  .wrap{
+    max-width:620px;margin:0 auto;
+    padding:max(28px, env(safe-area-inset-top)) max(20px, env(safe-area-inset-right)) max(56px, env(safe-area-inset-bottom)) max(20px, env(safe-area-inset-left));
+  }
+
+  .masthead{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:26px}
+  .masthead h1{
+    font-family:Fraunces,Georgia,serif;
+    font-size:19px;font-weight:500;letter-spacing:-.01em;margin:0;
+  }
+  .masthead p{margin:0;font-size:13px;color:var(--muted)}
+
+  .today{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:24px 22px 20px;
+  }
+  .datebar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:4px}
+  .date{font-size:14px;font-weight:600;color:var(--glaze);letter-spacing:.01em}
+  .context{font-size:13px;color:var(--muted)}
+  .rule{height:1px;background:var(--line);margin:14px 0 18px;border:0}
+
+  .meal-label{font-size:12.5px;font-weight:600;color:var(--muted);margin:0 0 6px}
+  .dishes{list-style:none;margin:0;padding:0}
+  .dishes li{
+    font-family:Fraunces,Georgia,serif;
+    font-size:26px;line-height:1.24;font-weight:400;
+    letter-spacing:-.012em;
+    margin:0 0 4px;
+  }
+  .dishes li.side{font-size:19px;color:var(--muted);font-weight:400}
+  sup.alg{
+    font-family:Archivo,sans-serif;
+    font-size:10px;font-weight:600;
+    color:var(--glaze);
+    vertical-align:super;
+    margin-left:3px;
+    letter-spacing:.04em;
+  }
+  .flanks{display:flex;gap:26px;margin-top:20px;flex-wrap:wrap}
+  .flank{flex:1 1 150px;min-width:140px}
+  .flank .val{font-family:Fraunces,Georgia,serif;font-size:17px;line-height:1.3}
+
+  .empty{font-family:Fraunces,Georgia,serif;font-size:24px;line-height:1.3;margin:8px 0 0}
+  .empty + p{font-size:14px;color:var(--muted);margin:8px 0 0}
+
+  .weeknav{display:flex;align-items:center;justify-content:space-between;margin:30px 0 10px}
+  .weeknav h2{font-size:13px;font-weight:600;color:var(--muted);margin:0}
+  .steps{display:flex;gap:6px}
+  button{font:inherit;color:inherit;cursor:pointer}
+  .chev{
+    width:40px;height:40px;border-radius:999px;
+    border:1px solid var(--line);background:var(--card);
+    display:grid;place-items:center;font-size:16px;line-height:1;
+    color:var(--muted);
+  }
+  .chev:hover{border-color:var(--glaze);color:var(--glaze)}
+
+  .week{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+  .week li{border-bottom:1px solid var(--line)}
+  .day{
+    width:100%;display:flex;gap:14px;align-items:flex-start;
+    background:none;border:0;padding:15px 4px;text-align:left;
+    min-height:44px;
+  }
+  .badge{
+    flex:none;width:26px;height:26px;border-radius:999px;
+    border:1px solid var(--line);color:var(--muted);
+    display:grid;place-items:center;
+    font-size:11px;font-weight:600;margin-top:1px;
+  }
+  .day.sel .badge{background:var(--glaze);border-color:var(--glaze);color:#fff}
+  .day.sel .main{color:var(--ink)}
+  .main{font-family:Fraunces,Georgia,serif;font-size:16px;line-height:1.35;color:var(--muted)}
+  .day:hover .main{color:var(--ink)}
+  .day:focus-visible,.chev:focus-visible,summary:focus-visible,select:focus-visible{
+    outline:2px solid var(--focus);outline-offset:2px;border-radius:8px;
+  }
+
+  details{margin-top:26px;border-top:1px solid var(--line);padding-top:14px}
+  summary{font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;list-style:none}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"+ ";color:var(--glaze)}
+  details[open] summary::before{content:"– "}
+  .panel{padding:14px 0 4px;font-size:14px;color:var(--muted)}
+  .panel p{margin:0 0 12px}
+  .field{display:flex;align-items:center;gap:10px;margin:0 0 12px;flex-wrap:wrap}
+  .field label{font-size:14px;color:var(--ink);min-width:112px}
+  select{
+    font:inherit;font-size:14px;padding:7px 10px;border-radius:9px;
+    border:1px solid var(--line);background:var(--card);color:var(--ink);
+  }
+  .key{list-style:none;margin:0;padding:0;columns:2;column-gap:20px;font-size:13.5px}
+  .key li{margin:0 0 3px;break-inside:avoid}
+  .key b{color:var(--glaze);font-weight:600;margin-right:5px}
+  footer{margin-top:28px;font-size:12.5px;color:var(--muted);line-height:1.55}
+
+  @media (max-width:420px){
+    .wrap{padding:22px 16px 48px}
+    .dishes li{font-size:23px}
+    .key{columns:1}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="masthead">
+    <h1>Menu al nido</h1>
+    <p>1–3 anni</p>
+  </header>
+
+  <section class="today" id="today" aria-live="polite"></section>
+
+  <div class="weeknav">
+    <h2 id="weeklabel"></h2>
+    <div class="steps">
+      <button class="chev" id="prev" aria-label="Previous week">‹</button>
+      <button class="chev" id="next" aria-label="Next week">›</button>
+    </div>
+  </div>
+  <ul class="week" id="week"></ul>
+
+  <details id="settings">
+    <summary>Week and season</summary>
+    <div class="panel">
+      <div class="field">
+        <label for="wkset">This week is</label>
+        <select id="wkset">
+          <option value="1">Prima settimana</option>
+          <option value="2">Seconda settimana</option>
+          <option value="3">Terza settimana</option>
+          <option value="4">Quarta settimana</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="seasonset">Season</label>
+        <select id="seasonset">
+          <option value="auto">Follow the calendar</option>
+          <option value="invernale">Invernale</option>
+          <option value="primaverile">Primaverile</option>
+          <option value="estivo">Estivo</option>
+          <option value="autunnale">Autunnale</option>
+        </select>
+      </div>
+      <p>Set the rotation once against what the nursery has posted and it counts forward on its own. Seasons follow the calendar unless the nido switches pages on a different date.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Allergens</summary>
+    <div class="panel">
+      <ul class="key">
+        <li><b>1</b>glutine</li>
+        <li><b>3</b>uova</li>
+        <li><b>4</b>pesce</li>
+        <li><b>7</b>latte</li>
+        <li><b>8</b>frutta a guscio</li>
+        <li><b>9</b>sedano</li>
+        <li><b>12</b>solfiti</li>
+      </ul>
+      <p style="margin-top:12px">An asterisk marks a frozen ingredient. Elior also flags possible cross-contamination across its kitchens, so for a real allergy go by the printed menu and the staff, not by this page.</p>
+    </div>
+  </details>
+
+  <footer>
+    Istituto degli Innocenti, Polo 0–6, catering by Elior. Fascia 1–3 anni e adulti. Every day also includes fresh fruit as spuntino and bread with lunch.
+  </footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var SNACK = "Frutta fresca";
+
+  // season -> 4 weeks -> 5 days (Mon..Fri). p = pranzo, m = merenda.
+  var MENU = {
+    invernale: [
+      [
+        {p:["Gnocchi al pomodoro|1,9","Bocconcini di pollo al latte|1,7","Verdure di stagione al vapore","Pane|1"], m:"Schiacciata all’olio|1"},
+        {p:["Crema di zucchine/zucca con orzo/pastina|1","Pesce* agli aromi|4,12","Finocchi filangè","Pane integrale|1"], m:"Dolce tipo torta margherita|1,3,7"},
+        {p:["Riso all’ortolana|9","Polpettine ricotta e vitella|1,3,7","Spinaci* saltati","Pane|1"], m:"Yogurt alla frutta/bianco|7"},
+        {p:["Minestra in brodo vegetale|1,9","Prosciutto cotto o Sformato di cotto a patate|1,3,7","Verdure crude","Pane integrale|1"], m:"Mousse di frutta"},
+        {p:["Pasta e fagioli alla veneta|1 o Pasta all’olio|1","Legumi all’olio","Finocchi al vapore","Pane|1"], m:"Pane e marmellata|1"}
+      ],
+      [
+        {p:["Pasta al pomodoro|1,9","Tagliata di tacchino","Verdure all’olio","Pane|1"], m:"Pane e olio|1"},
+        {p:["Riso alle bietole*","Polpette di verdure e legumi|1,3,7","Pane|1"], m:"Yogurt alla frutta/bianco|1"},
+        {p:["Minestra in brodo vegetale|1,9","Frittata di zucchine|3,7","Insalata mista","Pane integrale|1"], m:"Spremuta e 2 biscotti|1,3,7"},
+        {p:["Pasta al ragù vegetale|1,9","Asiago/grana/ricotta/stracchino|7","Carote julienne","Pane|1"], m:"Pane e marmellata|1"},
+        {p:["Zuppa e passato di verdure con farro|1,9","Pesce* arrosto|4,12","Patate lesse o Cous cous pesce* e farro con verdure|1,4,12","Pane integrale|1"], m:"Schiacciata all’olio|1"}
+      ],
+      [
+        {p:["Riso al pomodoro|9","Asiago/grana/ricotta/stracchino|7","Bietola* all’olio","Pane integrale|1"], m:"Yogurt alla frutta|7"},
+        {p:["Pasta alla zucca gialla|1","Bocconcini di pollo agli aromi","Patate arrosto","Pane|1"], m:"Dolce tipo torta margherita|1,3,7"},
+        {p:["Pasta all’olio|1","Pesce* alla livornese|4","Finocchi gratinati|7","Pane|1"], m:"Schiacciata all’olio|1"},
+        {p:["Passato di verdure o legumi|1,9 o Hummus","Pizza margherita|1,7","Pane integrale|1"], m:"Banana"},
+        {p:["Ravioli al pomodoro|1,3,7,9","Verdure gratinate","Pane|1"], m:"Budino|1,7"}
+      ],
+      [
+        {p:["Minestra di verdure con pastina|1","Pollo al forno","Verdure di stagione","Pane|1"], m:"Pane e marmellata|1"},
+        {p:["Riso all’ortolana|9","Frittata|3,7","Purè di patate|7","Pane integrale|1"], m:"Yogurt alla frutta/bianco|7"},
+        {p:["Pasta/Polenta al ragù|1,9","Carote julienne","Pane|1"], m:"Mousse di frutta e 2 biscotti|1,3,7"},
+        {p:["Zuppa o Passato di verdure con orzo|1,9","Lenticchie","Bietole* all’olio o Cous cous verdure e legumi|1","Pane|1"], m:"Spremuta e 2 biscotti|1,3,7"},
+        {p:["Riso allo yogurt|7,12","Pesce* arrosto|4,12","Finocchi al vapore","Pane integrale|1"], m:"Schiacciata all’olio|1"}
+      ]
+    ],
+    primaverile: [
+      [
+        {p:["Riso al pomodoro e basilico|9","Bocconcini di pollo al latte|1,7","Fagiolini* al vapore","Pane|1"], m:"Schiacciata all’olio|1"},
+        {p:["Crema di zucchine con pasta|1","Polpettine di ricotta e vitella|1,3,7","Insalatina","Pane integrale|1"], m:"Dolce tipo torta margherita|1,3,7"},
+        {p:["Pasta al pesto (no pinoli)|1,7","Pesce* arrosto|4,12","Spinaci* all’olio","Pane|1"], m:"Pane e marmellata|1"},
+        {p:["Riso e piselli*","Prosciutto cotto","Carote lesse","Pane integrale|1"], m:"Yogurt bianco/frutta|7"},
+        {p:["Minestra di verdure","Pizza margherita|1,7","Pane|1"], m:"Mousse di frutta"}
+      ],
+      [
+        {p:["Pasta/Gnocchi al pomodoro e basilico|1,9","Tagliata di tacchino","Cavolo e carote al vapore","Pane|1"], m:"Schiacciata all’olio|1"},
+        {p:["Riso all’olio","Polpettine di piselli*|1,3,7","Verdura cotta","Pane|1"], m:"Banana"},
+        {p:["Zuppa o Passato di verdure con pastina|1,9","Prosciutto cotto","Patate lesse","Pane integrale|1"], m:"Yogurt bianco/frutta|7"},
+        {p:["Riso all’olio","Asiago/grana/ricotta/stracchino|7","Carote filangè","Pane|1"], m:"Frutta fresca con 2 biscotti|1,3,7"},
+        {p:["Pasta al pomodoro|1,9","Pesce* arrosto|4,12","Finocchi gratinati|7","Pane integrale|1"], m:"Budino|1,7"}
+      ],
+      [
+        {p:["Pasta all’olio|1","Asiago/grana/ricotta/stracchino|7","Bietole* all’olio","Pane integrale|1"], m:"Pane e marmellata|1"},
+        {p:["Pappa al pomodoro|1","Sformato di ricotta e carote|1,3,7","Insalata mista","Pane|1"], m:"Yogurt bianco/frutta|7"},
+        {p:["Zuppa o Passato di verdura","Pizza margherita|1,7 o Tortino spinaci e ricotta|3,7","Pane|1"], m:"Mousse di frutta"},
+        {p:["Pasta con verdure di stagione|1,9","Petto di pollo alla salvia|1","Zucchine trifolate o paella con carne e verdure|1","Pane integrale|1"], m:"Schiacciata all’olio|1"},
+        {p:["Pasta al pesto (no pinoli)|1,7","Piselli* alla fiorentina o Prosciutto cotto","Piselli* stufati","Pane|1"], m:"Dolce tipo torta margherita|1,3,7"}
+      ],
+      [
+        {p:["Pasta al pomodoro|1,9","Petto di pollo alla salvia|1","Purè|7","Pane|1"], m:"Pane e marmellata|1"},
+        {p:["Pasta al pesce*|1,4","Bietola* all’olio o Cous cous di pesce e verdura|1,4","Pane integrale|1"], m:"Banana"},
+        {p:["Crema di verdure con riso","Asiago/grana/ricotta/stracchino|7","Patate e zucchine al vapore o Moussaka zucchine e ricotta|1,7","Pane|1"], m:"Yogurt bianco/frutta|7"},
+        {p:["Pasta all’olio|1","Tacchino alle erbe","Fagiolini* al vapore/insalatina","Pane|1"], m:"Mousse di frutta e 2 biscotti|1,3,7"},
+        {p:["Pasta al pomodoro|1,9","Pesce* all’isolana|4,12","Carote prezzemolate","Pane integrale|1"], m:"Schiacciata all’olio|1"}
+      ]
+    ],
+    estivo: [
+      [
+        {p:["Ravioli al pomodoro|1,3,7,9","Frittata con parmigiano|3,7","Pomodori e cetrioli","Pane integrale|1"], m:"Schiacciata all’olio|1"},
+        {p:["Passato di legumi con orzo|1","Verdure cotte","Pane|1"], m:"Yogurt bianco/frutta|7"},
+        {p:["Pasta al pesto (no pinoli)|1,7","Pesce* arrosto|4,12","Fantasie di verdure julienne","Pane|1"], m:"Dolce tipo torta margherita|1,3,7"},
+        {p:["Crema di piselli con riso|9","Prosciutto cotto","Insalata mista","Pane|1"], m:"Pane e pomodoro|1"},
+        {p:["Insalata di orzo/riso|1","Asiago/grana/ricotta/stracchino|7","Cetrioli","Pane integrale|1"], m:"Gelato*|1,7"}
+      ],
+      [
+        {p:["Pasta all’olio|1","Arista","Insalata arlecchino","Pane|1"], m:"Yogurt bianco/frutta|7"},
+        {p:["Riso con crema di zucchine","Prosciutto cotto","Finocchi gratinati|7","Pane integrale|1"], m:"Banana"},
+        {p:["Pasta alla carrettiera|1,9","Polpette di patate e formaggio|1,3,7","Verdure cotte","Pane|1"], m:"Schiacciata all’olio|1"},
+        {p:["Pasta primavera|1","Asiago/grana/ricotta/stracchino|7","Pomodori","Pane integrale|1"], m:"Budino|1,7"},
+        {p:["Pasta/semola fredda con pomodoro e mozzarella|1,7","Pesce* arrosto|4,12","Fagiolini* al limone|12","Pane|1"], m:"Pane e pomodoro|1,7"}
+      ],
+      [
+        {p:["Riso all’ortolana|9","Asiago/grana/ricotta/stracchino|7","Carote julienne","Pane|1"], m:"Schiacciata all’olio|1"},
+        {p:["Pasta alla carrettiera|1,9","Scaloppine di vitellone al limone|12","Fagiolini all’olio","Pane|1"], m:"Yogurt bianco/frutta|7"},
+        {p:["Zuppa o Passato di verdure","Pizza margherita|1,7","Caprese|7","Pane integrale|1"], m:"Banana"},
+        {p:["Pasta con verdure|1,9","Petto di pollo alla salvia|1","Zucchine trifolate o paella con carne e verdure|1","Pane|1"], m:"Dolce tipo torta margherita|1,3,7"},
+        {p:["Pasta al pesto (no pinoli)|1,7","Piselli* e carote","Pane integrale|1"], m:"Gelato*|1,7"}
+      ],
+      [
+        {p:["Pasta con pesce*|1,4","Bietola all’olio","Pane integrale|1"], m:"Pane e pomodoro|1"},
+        {p:["Pasta al pomodoro fresco e basilico|1,9","Bocconcini di pollo con patate","Pane integrale|1"], m:"Banana"},
+        {p:["Crema di verdure con riso","Asiago/grana/ricotta/stracchino|7","Carote e zucchine julienne","Moussaka di zucchine e ricotta|1,7","Pane|1"], m:"Schiacciata all’olio|1"},
+        {p:["Pappa al pomodoro|1","Tacchino alle erbe","Fagiolini* all’olio","Pane integrale|1"], m:"Mousse di frutta"},
+        {p:["Pasta primavera|1,9","Tortino di verdure|3,7 o Frittata|3,7","Verdure trifolate","Pane|1"], m:"Yogurt bianco/frutta|7"}
+      ]
+    ],
+    autunnale: [
+      [
+        {p:["Pasta/gnocchi al pomodoro e basilico|1,9","Frittata con parmigiano|3,7","Pomodori e cetrioli","Pane|1"], m:"Schiacciata all’olio|1"},
+        {p:["Orzotto con verdure di stagione|1","Polpette di ricotta e vitella|1,3,7","Patate lesse o arrosto","Pane|1"], m:"Yogurt bianco/frutta|7"},
+        {p:["Riso all’olio","Polpettine di piselli*|1,3,7","Insalata mista","Pane|1"], m:"Dolce tipo torta margherita|1,3,7"},
+        {p:["Pasta al pesto|1,7,8","Pesce* al forno|4,12","Verdure saltate","Pane|1"], m:"Pane e pomodoro|1"},
+        {p:["Orzo/Riso al pomodoro|1,9","Asiago/grana/ricotta/stracchino|7","Verdure di stagione all’olio","Pane|1"], m:"Budino|1,7"}
+      ],
+      [
+        {p:["Pasta all’olio|1","Arista","Insalata arlecchino","Pane|1"], m:"Yogurt bianco/frutta|7"},
+        {p:["Riso con crema di zucchine","Prosciutto cotto","Finocchi gratinati|7","Pane|1"], m:"Banana"},
+        {p:["Pasta all’olio|1","Fagioli all’uccelletto","Verdure cotte","Pane|1"], m:"Schiacciata all’olio|1"},
+        {p:["Pasta primavera|1,9","Asiago/grana/ricotta/stracchino|7","Pomodori","Pane|1"], m:"Budino|1,7"},
+        {p:["Pasta/semola fredda con pomodoro e mozzarella|1,7","Pesce* arrosto|4,12","Fagiolini al limone|12","Pane|1"], m:"Pane e pomodoro|1"}
+      ],
+      [
+        {p:["Riso all’ortolana|9","Asiago/grana/ricotta/stracchino|7","Carote julienne","Pane|1"], m:"Schiacciata all’olio|1"},
+        {p:["Pasta alla carrettiera|1,9","Sformato di fagiolini*|1,3,7","Pane|1"], m:"Yogurt bianco/frutta|7"},
+        {p:["Zuppa o Passato di verdure","Pizza margherita|1,7","Caprese|7","Pane|1"], m:"Banana"},
+        {p:["Pasta con verdure|1,9","Petto di pollo alla salvia|1","Zucchine trifolate o paella con carne e verdure|1","Pane|1"], m:"Dolce tipo torta margherita|1,3,7"},
+        {p:["Pasta al pesto (no pinoli)|1,7","Piselli* e carote","Pane|1"], m:"Mousse di frutta"}
+      ],
+      [
+        {p:["Pasta al pomodoro|1,9","Bocconcini di petto di pollo con patate","Pane|1"], m:"Pane e olio|1"},
+        {p:["Pasta al pesce*|1,4","Bietola* all’olio o Cous cous di pesce* e verdure|1,4,12","Pane|1"], m:"Banana"},
+        {p:["Crema di verdure con riso|9","Asiago/grana/ricotta/stracchino|7","Carote e zucchine julienne o Moussaka di zucchine e ricotta|7","Pane|1"], m:"Schiacciata all’olio|1"},
+        {p:["Pappa al pomodoro|1","Tacchino alle erbe","Fagiolini* all’olio","Pane|1"], m:"Mousse di frutta"},
+        {p:["Pasta al pesto invernale (no pinoli)|1,7","Tortino di verdure|3,7","Frittata|3,7","Verdure trifolate","Pane|1"], m:"Yogurt bianco/frutta|7"}
+      ]
+    ]
+  };
+
+  var DAY_SHORT = ["L","Ma","Me","G","V"];
+  var DAY_IT = ["Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato","Domenica"];
+  var MONTH_IT = ["gennaio","febbraio","marzo","aprile","maggio","giugno","luglio","agosto","settembre","ottobre","novembre","dicembre"];
+  var WEEK_IT = ["Prima","Seconda","Terza","Quarta"];
+
+  function store(key, val){
+    try{
+      if(val === undefined) return window.localStorage.getItem(key);
+      window.localStorage.setItem(key, val);
+    }catch(e){ return null; }
+  }
+
+  function mondayOf(d){
+    var x = new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    x.setDate(x.getDate() - ((x.getDay() + 6) % 7));
+    return x;
+  }
+  function iso(d){
+    return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0");
+  }
+  function parseISO(s){
+    var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s || "");
+    return m ? new Date(+m[1], +m[2]-1, +m[3]) : null;
+  }
+  function weeksBetween(a,b){
+    return Math.round((b - a) / 604800000);
+  }
+
+  var today = new Date();
+  today.setHours(0,0,0,0);
+
+  // Anchor: which rotation week the nursery is on, for a given Monday.
+  var anchor = { mon: iso(mondayOf(today)), week: 3 };
+  try{
+    var saved = JSON.parse(store("nido.anchor") || "null");
+    if(saved && saved.mon && saved.week) anchor = saved;
+  }catch(e){}
+
+  var seasonPref = store("nido.season") || "auto";
+
+  function rotationWeek(d){
+    var base = parseISO(anchor.mon) || mondayOf(today);
+    var delta = weeksBetween(base, mondayOf(d));
+    return ((((anchor.week - 1 + delta) % 4) + 4) % 4) + 1;
+  }
+
+  function autoSeason(d){
+    var m = d.getMonth() + 1, day = d.getDate();
+    var k = m * 100 + day;
+    if(k >= 1221 || k <= 320) return "invernale";
+    if(k <= 620) return "primaverile";
+    if(k <= 920) return "estivo";
+    return "autunnale";
+  }
+  function seasonFor(d){
+    return seasonPref === "auto" ? autoSeason(d) : seasonPref;
+  }
+
+  function cell(d){
+    var dow = (d.getDay() + 6) % 7;
+    if(dow > 4) return null;
+    return MENU[seasonFor(d)][rotationWeek(d) - 1][dow];
+  }
+
+  function esc(s){
+    return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+  }
+  function dish(str){
+    // "Name|1,9" or "A|1 o B|3"
+    return esc(str).replace(/\|([\d,]+)/g, function(_, nums){
+      return '<sup class="alg">' + nums.replace(/,/g,"·") + "</sup>";
+    });
+  }
+  function plain(str){
+    return str.replace(/\|[\d,]+/g, "");
+  }
+  function longDate(d){
+    return DAY_IT[(d.getDay()+6)%7] + " " + d.getDate() + " " + MONTH_IT[d.getMonth()];
+  }
+
+  var selected = (function(){
+    var d = new Date(today);
+    while(((d.getDay()+6)%7) > 4) d.setDate(d.getDate()+1); // weekend: jump to Monday
+    return d;
+  })();
+
+  var todayEl = document.getElementById("today");
+  var weekEl = document.getElementById("week");
+  var weekLabel = document.getElementById("weeklabel");
+
+  function renderToday(){
+    var c = cell(selected);
+    var isToday = iso(selected) === iso(today);
+    var when = isToday ? "Oggi" : longDate(selected);
+    var head =
+      '<div class="datebar">' +
+        '<span class="date">' + esc(when) + (isToday ? " · " + esc(longDate(selected)) : "") + "</span>" +
+        '<span class="context">' + WEEK_IT[rotationWeek(selected)-1].toLowerCase() + " settimana · " + seasonFor(selected) + "</span>" +
+      "</div>";
+
+    if(!c){
+      todayEl.innerHTML = head + '<hr class="rule"><p class="empty">Nido chiuso</p><p>Pick a weekday below.</p>';
+      return;
+    }
+
+    var main = c.p.slice(0, 2).map(function(x){ return '<li>' + dish(x) + "</li>"; }).join("");
+    var sides = c.p.slice(2).map(function(x){ return '<li class="side">' + dish(x) + "</li>"; }).join("");
+
+    todayEl.innerHTML = head + '<hr class="rule">' +
+      '<p class="meal-label">Pranzo</p>' +
+      '<ul class="dishes">' + main + sides + "</ul>" +
+      '<div class="flanks">' +
+        '<div class="flank"><p class="meal-label">Spuntino</p><div class="val">' + SNACK + "</div></div>" +
+        '<div class="flank"><p class="meal-label">Merenda</p><div class="val">' + dish(c.m) + "</div></div>" +
+      "</div>";
+  }
+
+  function renderWeek(){
+    var mon = mondayOf(selected);
+    var thisWeek = iso(mon) === iso(mondayOf(today));
+    weekLabel.textContent = thisWeek ? "This week" : longDate(mon).replace(/^Lunedì /, "Week of ");
+
+    var html = "";
+    for(var i = 0; i < 5; i++){
+      var d = new Date(mon.getFullYear(), mon.getMonth(), mon.getDate() + i);
+      var c = cell(d);
+      var sel = iso(d) === iso(selected) ? " sel" : "";
+      html +=
+        '<li><button class="day' + sel + '" data-date="' + iso(d) + '">' +
+          '<span class="badge">' + DAY_SHORT[i] + "</span>" +
+          '<span class="main">' + esc(plain(c.p[0])) + "</span>" +
+        "</button></li>";
+    }
+    weekEl.innerHTML = html;
+  }
+
+  function render(){
+    renderToday();
+    renderWeek();
+    document.getElementById("wkset").value = String(rotationWeek(selected));
+    document.getElementById("seasonset").value = seasonPref;
+  }
+
+  weekEl.addEventListener("click", function(e){
+    var btn = e.target.closest("button.day");
+    if(!btn) return;
+    selected = parseISO(btn.getAttribute("data-date"));
+    render();
+  });
+
+  document.getElementById("prev").addEventListener("click", function(){
+    selected = new Date(selected.getFullYear(), selected.getMonth(), selected.getDate() - 7);
+    render();
+  });
+  document.getElementById("next").addEventListener("click", function(){
+    selected = new Date(selected.getFullYear(), selected.getMonth(), selected.getDate() + 7);
+    render();
+  });
+
+  document.getElementById("wkset").addEventListener("change", function(e){
+    anchor = { mon: iso(mondayOf(selected)), week: parseInt(e.target.value, 10) };
+    store("nido.anchor", JSON.stringify(anchor));
+    render();
+  });
+  document.getElementById("seasonset").addEventListener("change", function(e){
+    seasonPref = e.target.value;
+    store("nido.season", seasonPref);
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
